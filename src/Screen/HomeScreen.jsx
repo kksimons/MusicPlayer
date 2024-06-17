@@ -6,6 +6,7 @@ import { fontSize, iconSizes, spacing } from '../constants/dimensions';
 import { fontFamilies } from '../constants/fonts';
 import SongCard from '../components/SongCard';
 import SongCardWithCategory from '../components/SongCardWithCategory';
+import FloatingPlayer from '../components/FloatingPlayer';
 
 const HomeScreen = () => {
     return (
@@ -19,6 +20,7 @@ const HomeScreen = () => {
                     paddingBottom: 400,
                 }}
             />
+            <FloatingPlayer />
         </View>
     );
 }
