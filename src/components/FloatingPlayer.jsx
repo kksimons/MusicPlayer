@@ -6,6 +6,7 @@ import { fontFamilies } from '../constants/fonts'
 import { GoToNextButton, GoToPreviousButton, PlayPauseButton } from './PlayerControls'
 import { useSharedValue } from 'react-native-reanimated'
 import { Slider } from 'react-native-awesome-slider'
+import MovingText from './MovingText'
 
 const imageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/701/325x325/nostalgia-1718323267-zWVQ91T49m.jpg'
 
@@ -28,12 +29,18 @@ const FloatingPlayer = () => {
                         maximumTrackTintColor: colors.minimumTrackTintColor,
                         minimumTrackTintColor: colors.maximumTrackTintColor,
                     }}
+                    //this gets rid of the value on top of the slider bubble
+                    renderBubble={() => <View />}
                 />
             </View>
             <TouchableOpacity style={styles.container} activeOpacity={0.85}>
                 <Image source={{ uri: imageUrl }} style={styles.coverImage} />
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Nostalgia</Text>
+                    <MovingText
+                        text={"Nostalgia"}
+                        style={styles.title}
+                        animationThreshold={15}
+                    />
                     <Text style={styles.artist}>Johnning, Janji</Text>
                 </View>
                 <View style={styles.playerControlContainer}>
@@ -61,6 +68,9 @@ const styles = StyleSheet.create({
     titleContainer: {
         flex: 1,
         paddingHorizontal: spacing.sm,
+        overflow: "hidden",
+        marginLeft: spacing.sm,
+        marginRight: spacing.lg,
     },
     title: {
         color: colors.textPrimary,
