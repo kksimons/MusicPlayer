@@ -5,6 +5,8 @@ import HomeScreen from "./src/Screen/HomeScreen";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LikeScreen from "./src/Screen/LikeScreen";
 import PlayerScreen from "./src/Screen/PlayerScreen";
+import StackNavigation from "./src/navigation/StackNavigation";
+import DrawerNavigator from "./src/navigation/DrawerNavigator";
 
 
 const Stack = createNativeStackNavigator();
@@ -13,15 +15,8 @@ const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerShown: false,
-        }}
-          initialRouteName="PLAYER_SCREEN"
-        >
-          <Stack.Screen name="HOME_SCREEN" component={HomeScreen} />
-          <Stack.Screen name="LIKE_SCREEN" component={LikeScreen} />
-          <Stack.Screen name="PLAYER_SCREEN" component={PlayerScreen} />
-        </Stack.Navigator>
+        {/* <StackNavigation /> */}
+        <DrawerNavigator />
       </NavigationContainer>
     </GestureHandlerRootView>
   )
