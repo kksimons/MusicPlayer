@@ -25,11 +25,11 @@ const HomeScreen = () => {
     );
 }
 
+export default HomeScreen;
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.background,
-        flex: 1,
-    },
-});
-
-export default HomeScreen;
+        flex: 1
+    }
+})

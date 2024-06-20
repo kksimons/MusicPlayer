@@ -7,14 +7,21 @@ import { GoToNextButton, GoToPreviousButton, PlayPauseButton } from './PlayerCon
 import { useSharedValue } from 'react-native-reanimated'
 import { Slider } from 'react-native-awesome-slider'
 import MovingText from './MovingText'
+import { useNavigation } from '@react-navigation/native'
 
 const imageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/001/701/325x325/nostalgia-1718323267-zWVQ91T49m.jpg'
 
 
 const FloatingPlayer = () => {
+    const navigation = useNavigation();
     const progress = useSharedValue(30);
     const min = useSharedValue(0);
     const max = useSharedValue(100);
+
+    const handleOpenPlayerScreen = () => {
+        navigation.navigate("PLAYER_SCREEN");
+    }
+
     return (
         <View>
             <View style={{
@@ -33,7 +40,7 @@ const FloatingPlayer = () => {
                     renderBubble={() => <View />}
                 />
             </View>
-            <TouchableOpacity style={styles.container} activeOpacity={0.85}>
+            <TouchableOpacity style={styles.container} activeOpacity={0.85} onPress={handleOpenPlayerScreen}>
                 <Image source={{ uri: imageUrl }} style={styles.coverImage} />
                 <View style={styles.titleContainer}>
                     <MovingText
