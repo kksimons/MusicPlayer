@@ -3,14 +3,18 @@ import React from 'react'
 import { colors } from '../constants/colors';
 import { fontSize, iconSizes, spacing } from '../constants/dimensions';
 import { fontFamilies } from '../constants/fonts';
-const imageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/152/325x325/1705340894_JZ2NifV4gB_2024---CARTOON-JEYJA---On--On-ft.-Daniel-Levi.jpg'
+const fallbackImageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/152/325x325/1705340894_JZ2NifV4gB_2024---CARTOON-JEYJA---On--On-ft.-Daniel-Levi.jpg'
 
-const SongCard = ({ containerStyle, imageStyle }) => {
+const SongCard = ({ item, containerStyle, imageStyle }) => {
+    const imageUrl = item?.artwork ? { uri: item.artwork } : { uri: fallbackImageUrl };
+
     return (
         <TouchableOpacity style={[styles.container, containerStyle]}>
-            <Image source={{ uri: imageUrl }} style={[styles.coverImage, imageStyle]} />
-            <Text style={styles.title} numberOfLines={1}>On & On (feat. Daniel Levi)</Text>
-            <Text style={styles.artist}>Cartoon, Daniel Levi, Jéja</Text>
+            <Image
+                source={imageUrl}
+                style={[styles.coverImage, imageStyle]} />
+            <Text style={styles.title} numberOfLines={1}>{item?.title}</Text>
+            <Text style={styles.artist}>{item?.artist}</Text>
         </TouchableOpacity>
     )
 }

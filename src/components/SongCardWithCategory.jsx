@@ -5,16 +5,17 @@ import { colors } from '../constants/colors';
 import { fontSize, iconSizes, spacing } from '../constants/dimensions';
 import { fontFamilies } from '../constants/fonts';
 
-const SongCardWithCategory = () => {
+const SongCardWithCategory = ({ item }) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.headingText}>Recommended for you</Text>
+            <Text style={styles.headingText}>{item.title}</Text>
             <FlatList
-                data={[1, 2, 3, 4, 5]}
-                renderItem={SongCard}
+                data={item.songs}
+                renderItem={({ item }) => <SongCard item={item} />}
                 horizontal={true}
                 ItemSeparatorComponent={<View style={{ marginHorizontal: spacing.sm }} />}
                 contentContainerStyle={{ paddingHorizontal: spacing.lg }}
+                keyExtractor={(item) => item.url}
             />
         </View>
     )

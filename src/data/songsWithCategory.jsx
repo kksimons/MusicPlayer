@@ -1,6 +1,6 @@
 import { recommendedSongs } from "./songs";
 
-export const songWithCategory = [
+export const songsWithCategory = [
     {
         title: 'Recommended For You',
         songs: recommendedSongs,
