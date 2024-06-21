@@ -9,19 +9,17 @@ import StackNavigation from "./src/navigation/StackNavigation";
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
 import TrackPlayer from 'react-native-track-player';
 import { useEffect } from "react";
+import { useSetupPlayer } from "./src/hooks/useSetupTrackPlayer";
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
 
-  useEffect(() => {
-    setupPlayer()
-  }, [])
-
-  const setupPlayer = async () => {
-    await TrackPlayer.setupPlayer()
+  const onLoad = () => {
     console.log("track player setup")
   }
+
+  useSetupPlayer({ onLoad });
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

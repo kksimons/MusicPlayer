@@ -3,13 +3,17 @@ import React from 'react'
 import { colors } from '../constants/colors';
 import { fontSize, iconSizes, spacing } from '../constants/dimensions';
 import { fontFamilies } from '../constants/fonts';
+import TrackPlayer from 'react-native-track-player';
 const fallbackImageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/152/325x325/1705340894_JZ2NifV4gB_2024---CARTOON-JEYJA---On--On-ft.-Daniel-Levi.jpg'
 
-const SongCard = ({ item, containerStyle, imageStyle }) => {
+const SongCard = ({ item, containerStyle, imageStyle, handlePlay }) => {
     const imageUrl = item?.artwork ? { uri: item.artwork } : { uri: fallbackImageUrl };
 
     return (
-        <TouchableOpacity style={[styles.container, containerStyle]}>
+        <TouchableOpacity
+            style={[styles.container, containerStyle]}
+            onPress={() => handlePlay(item)}
+        >
             <Image
                 source={imageUrl}
                 style={[styles.coverImage, imageStyle]} />
