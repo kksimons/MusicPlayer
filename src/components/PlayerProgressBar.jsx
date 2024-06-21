@@ -5,16 +5,28 @@ import { fontFamilies } from '../constants/fonts'
 import { fontSize, spacing } from '../constants/dimensions'
 import { Slider } from 'react-native-awesome-slider'
 import { useSharedValue } from 'react-native-reanimated'
+import TrackPlayer, { useProgress } from 'react-native-track-player'
+import { formatSecondsToMinutes } from '../utils/conversions'
 
 const PlayerProgressBar = () => {
+    const { duration, position } = useProgress()
     const progress = useSharedValue(0.25);
     const min = useSharedValue(0);
     const max = useSharedValue(1);
+    const isSliding = useSharedValue(false)
+
+    if (isSliding.value) {
+        progress.value = duration > 0 ? position / duration : 0
+    }
+
+    const trackElapsedTime = formatSecondsToMinutes(position)
+    const trackRemainingTime = formatSecondsToMinutes(duration - position)
+
     return (
         <View>
             <View style={styles.timeRow}>
-                <Text style={styles.timeText}>00:50</Text>
-                <Text style={styles.timeText}>{"-"}04:00</Text>
+                <Text style={styles.timeText}>{trackElapsedTime}</Text>
+                <Text style={styles.timeText}>{"-"}{trackRemainingTime}</Text>
             </View>
             <Slider
                 style={styles.sliderContainer}
@@ -31,6 +43,17 @@ const PlayerProgressBar = () => {
                 maximumValue={max}
                 thumbWidth={18}
                 renderBubble={() => null}
+                onSlidingStart={() => (isSliding.value = true)}
+                onValueChange={async (value) => {
+                    await TrackPlayer.seekTo(value * duration)
+                }}
+                onSlidingComplete={async (value) => {
+                    if (!isSliding.value) {
+                        return
+                    }
+                    isSliding.value = false
+                    await TrackPlayer.seekTo(value * duration)
+                }}
             />
         </View>
     )
@@ -48,7 +71,7 @@ const styles = StyleSheet.create({
     timeText: {
         color: colors.textPrimary,
         fontFamily: fontFamilies.regular,
-        fontSize: fontSize.sm,
+        fontSize: fontSize.md,
         opacity: 0.75,
     },
     sliderContainer: {
