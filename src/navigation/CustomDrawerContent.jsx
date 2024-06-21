@@ -1,29 +1,35 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
-import { colors } from '../constants/colors'
 import { fontSize, iconSizes, spacing } from '../constants/dimensions'
+import { fontFamilies } from '../constants/fonts'
+import { useTheme } from '@react-navigation/native'
+import { useThemeStore } from '../store/themeStore'
 
 //icons
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Octicons from "react-native-vector-icons/Octicons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import { fontFamilies } from '../constants/fonts'
 
-const CustomDrawerCustom = (props) => {
-    const isDarkMode = true;
+const CustomDrawerContent = (props) => {
+    const { colors } = useTheme()
+    const { isDarkMode, toggleTheme } = useThemeStore()
+
     const toggleDrawer = () => {
         props.navigation.toggleDrawer()
     }
 
     return (
-        <DrawerContentScrollView style={styles.container}>
+        <DrawerContentScrollView style={[styles.container, { backgroundColor: colors.background }]}>
             <View style={styles.headerIconContainer}>
                 <TouchableOpacity onPress={toggleDrawer}>
                     <AntDesign name={"close"} color={colors.iconPrimary} size={iconSizes.lg} />
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Octicons name={isDarkMode ? "moon" : "sun"} color={colors.iconPrimary} size={iconSizes.lg} />
+                <TouchableOpacity onPress={() => toggleTheme()}>
+                    <Octicons
+                        name={isDarkMode ? "sun" : "moon"}
+                        color={colors.iconPrimary}
+                        size={iconSizes.lg} />
                 </TouchableOpacity>
             </View>
             <View style={styles.drawerItemContainer}>
@@ -36,7 +42,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -49,7 +55,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -62,7 +68,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -75,7 +81,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -88,7 +94,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -101,7 +107,7 @@ const CustomDrawerCustom = (props) => {
                             color={colors.iconSecondary}
                         />
                     )}
-                    labelStyle={styles.labelStyle}
+                    labelStyle={[styles.labelStyle, { color: colors.textPrimary }]}
                     style={styles.drawerItem}
                     onPress={() => { props.navigation.navigate("LIKE_SCREEN") }}
                 />
@@ -110,11 +116,10 @@ const CustomDrawerCustom = (props) => {
     )
 }
 
-export default CustomDrawerCustom
+export default CustomDrawerContent
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.background,
         padding: spacing.lg,
     },
     headerIconContainer: {
@@ -127,7 +132,6 @@ const styles = StyleSheet.create({
     },
     labelStyle: {
         fontSize: fontSize.md,
-        color: colors.textPrimary,
         fontFamily: fontFamilies.medium
     },
     drawerItem: {

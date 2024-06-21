@@ -7,8 +7,11 @@ import { Slider } from 'react-native-awesome-slider'
 import { useSharedValue } from 'react-native-reanimated'
 import TrackPlayer, { useProgress } from 'react-native-track-player'
 import { formatSecondsToMinutes } from '../utils/conversions'
+import { useTheme } from '@react-navigation/native'
 
 const PlayerProgressBar = () => {
+    const { colors } = useTheme()
+
     const { duration, position } = useProgress()
     const progress = useSharedValue(0.25);
     const min = useSharedValue(0);
@@ -25,8 +28,8 @@ const PlayerProgressBar = () => {
     return (
         <View>
             <View style={styles.timeRow}>
-                <Text style={styles.timeText}>{trackElapsedTime}</Text>
-                <Text style={styles.timeText}>{"-"}{trackRemainingTime}</Text>
+                <Text style={[styles.timeText, { color: colors.textPrimary }]}>{trackElapsedTime}</Text>
+                <Text style={[styles.timeText, { color: colors.textPrimary }]}>{"-"}{trackRemainingTime}</Text>
             </View>
             <Slider
                 style={styles.sliderContainer}
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
         marginTop: spacing.xl
     },
     timeText: {
-        color: colors.textPrimary,
         fontFamily: fontFamilies.regular,
         fontSize: fontSize.md,
         opacity: 0.75,

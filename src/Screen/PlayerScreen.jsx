@@ -1,10 +1,5 @@
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { colors } from '../constants/colors'
-//icons
-import AntDesign from "react-native-vector-icons/AntDesign"
-import Feather from "react-native-vector-icons/Feather"
-
 import { fontSize, iconSizes, spacing } from '../constants/dimensions'
 import { fontFamilies } from '../constants/fonts'
 import PlayerRepeatToggle from '../components/PlayerRepeatToggle'
@@ -12,13 +7,19 @@ import PlayerShuffleToggle from '../components/PlayerShuffleToggle'
 import PlayerProgressBar from '../components/PlayerProgressBar'
 import { GoToNextButton, GoToPreviousButton, PlayPauseButton } from '../components/PlayerControls'
 import TrackPlayer, { useActiveTrack } from 'react-native-track-player'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useTheme } from '@react-navigation/native'
+import useLikeSongs from '../store/likeStore'
+import { isExist } from '../utils/isExist'
+//icons
+import AntDesign from "react-native-vector-icons/AntDesign"
+import Feather from "react-native-vector-icons/Feather"
 
-const imageUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/287/325x325/mortals-feat-laura-brehm-1586948734-yFnA6l5Geq.jpg"
 
 const PlayerScreen = () => {
+    const { colors } = useTheme()
+
+    const { likedSongs, addToLiked } = useLikeSongs()
     const activeTrack = useActiveTrack()
-    const isLiked = false;
     const [isMute, setIsMute] = useState(false);
     const navigation = useNavigation()
 
@@ -54,13 +55,13 @@ const PlayerScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
             {/* header */}
             <View style={styles.headerContainer}>
                 <TouchableOpacity onPress={handleGoBack}>
                     <AntDesign name={"arrowleft"} color={colors.iconPrimary} size={iconSizes.md} />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>Playing Now</Text>
+                <Text style={[styles.headerText, { color: colors.textPrimary }]}>Playing Now</Text>
             </View>
             {/* image */}
             <View style={styles.coverImageContainer}>
@@ -69,12 +70,15 @@ const PlayerScreen = () => {
             {/* render title and artist */}
             <View style={styles.titleRowHeartContainer}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{activeTrack.title}</Text>
-                    <Text style={styles.artist}>{activeTrack.artist}</Text>
+                    <Text style={[styles.title, { color: colors.textPrimary }]}>{activeTrack.title}</Text>
+                    <Text style={[styles.artist, { color: colors.textSecondary }]}>{activeTrack.artist}</Text>
                 </View>
                 {/* icon container*/}
-                <TouchableOpacity>
-                    <AntDesign name={isLiked ? "heart" : "hearto"} color={colors.iconSecondary} size={iconSizes.md} />
+                <TouchableOpacity onPress={() => addToLiked(activeTrack)}>
+                    <AntDesign
+                        name={isExist(likedSongs, activeTrack) ? "heart" : "hearto"}
+                        color={colors.iconSecondary}
+                        size={iconSizes.md} />
                 </TouchableOpacity>
             </View>
             {/* player control */}
@@ -103,7 +107,6 @@ export default PlayerScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
         padding: spacing.lg,
     },
     headerContainer: {
@@ -112,7 +115,6 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     headerText: {
-        color: colors.textPrimary,
         textAlign: "center",
         fontSize: fontSize.lg,
         fontFamily: fontFamilies.medium,
@@ -129,13 +131,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     title: {
-        color: colors.textPrimary,
         fontSize: fontSize.lg,
         fontFamily: fontFamilies.medium,
     },
     artist: {
         fontSize: fontSize.md,
-        color: colors.textSecondary,
     },
     titleRowHeartContainer: {
         flexDirection: "row",
