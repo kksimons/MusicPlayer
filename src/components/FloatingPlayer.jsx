@@ -51,14 +51,20 @@ const FloatingPlayer = () => {
                     renderBubble={() => null}
                     onSlidingStart={() => (isSliding.value = true)}
                     onValueChange={async (value) => {
-                        await TrackPlayer.seekTo(value * duration)
+                        const newPosition = value * duration;
+                        if (!isNaN(newPosition)) {
+                            await TrackPlayer.seekTo(newPosition);
+                        }
                     }}
                     onSlidingComplete={async (value) => {
                         if (!isSliding.value) {
-                            return
+                            return;
                         }
-                        isSliding.value = false
-                        await TrackPlayer.seekTo(value * duration)
+                        isSliding.value = false;
+                        const newPosition = value * duration;
+                        if (!isNaN(newPosition)) {
+                            await TrackPlayer.seekTo(newPosition);
+                        }
                     }}
                 />
             </View>

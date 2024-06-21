@@ -13,7 +13,7 @@ const HomeScreen = () => {
     const { colors } = useTheme()
 
     return (
-        <View style={[, { backgroundColor: colors.background }]}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
             <Header />
             <FlatList
                 data={songsWithCategory}
