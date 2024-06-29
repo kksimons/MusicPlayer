@@ -58,7 +58,7 @@ const LoginScreen = ({ navigation }) => {
                     onChangeText={text => setEmail(text)}
                     placeholder="Email or Username"
                     placeholderTextColor={colors.textSecondary}
-                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                    style={[styles.input, { borderColor: '#FFA300', color: 'white' }]}
                 />
                 <LoginTextInput
                     value={password}
@@ -66,7 +66,7 @@ const LoginScreen = ({ navigation }) => {
                     placeholder="Password"
                     secureTextEntry
                     placeholderTextColor={colors.textSecondary}
-                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                    style={[styles.input, { borderColor: '#FFA300', color: 'white' }]}
                 />
                 <View style={styles.textNoAccountContainer}>
                     <Text style={[styles.textNoAccount, { color: colors.textSecondary }]}>

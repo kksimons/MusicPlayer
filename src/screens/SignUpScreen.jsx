@@ -38,7 +38,7 @@ const SignUpScreen = ({ navigation }) => {
                     onChangeText={text => setEmail(text)}
                     placeholder="Email or Username"
                     placeholderTextColor={colors.textSecondary}
-                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                    style={[styles.input, { borderColor: '#FFA300', color: 'white' }]}
                 />
                 <LoginTextInput
                     value={password}
@@ -46,7 +46,7 @@ const SignUpScreen = ({ navigation }) => {
                     placeholder="Password"
                     secureTextEntry
                     placeholderTextColor={colors.textSecondary}
-                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                    style={[styles.input, { borderColor: '#FFA300', color: 'white' }]}
                 />
                 <LoginTextInput
                     value={confirmPassword}
@@ -54,12 +54,14 @@ const SignUpScreen = ({ navigation }) => {
                     placeholder="Confirm Password"
                     secureTextEntry
                     placeholderTextColor={colors.textSecondary}
-                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                    style={[styles.input, { borderColor: '#FFA300', color: 'white' }]}
                 />
                 <View style={styles.buttonWrapper}>
                     <LoginButton onPress={signUpTestFn} title={"Sign Up"} buttonStyle={{ backgroundColor: '#FFA300' }} />
                 </View>
-                <Text style={[styles.orText, { color: colors.textSecondary }]}>OR</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("LOGIN_SCREEN")}>
+                    <Text style={[styles.orText, { color: colors.textSecondary }]}>Back to the sign in page</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -98,7 +100,8 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     orText: {
-        fontSize: 20,
+        fontSize: 12,
         marginTop: 20,
+        textDecorationLine: 'underline',
     },
 });

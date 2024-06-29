@@ -1,17 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { TextInput } from 'react-native-gesture-handler'
+import { StyleSheet, TextInput, View } from 'react-native';
+import React from 'react';
 
-const LoginTextInput = ({ ...props }) => {
+const LoginTextInput = ({ style, ...props }) => {
     return (
         <View style={styles.container}>
-            <TextInput style={styles.input} {...props} />
-            <View style={styles.border} />
+            <TextInput
+                style={[styles.input, style]}
+                {...props}
+            />
         </View>
-    )
-}
+    );
+};
 
-export default LoginTextInput
+export default LoginTextInput;
 
 const styles = StyleSheet.create({
     container: {
@@ -19,16 +20,11 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         paddingHorizontal: 1,
-        marginBottom: 20
+        marginBottom: 20,
     },
     input: {
         width: "100%",
-        height: 50
+        height: 50,
+        color: 'white',
     },
-    border: {
-        width: "100%",
-        backgroundColor: "gray",
-        height: 1,
-        alignSelf: "center"
-    }
-})
+});
