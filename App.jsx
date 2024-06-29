@@ -1,10 +1,10 @@
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, View, useColorScheme } from "react-native"
-import HomeScreen from "./src/Screen/HomeScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import LikeScreen from "./src/Screen/LikeScreen";
-import PlayerScreen from "./src/Screen/PlayerScreen";
+import LikeScreen from "./src/screens/LikeScreen";
+import PlayerScreen from "./src/screens/PlayerScreen";
 import StackNavigation from "./src/navigation/StackNavigation";
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
 import TrackPlayer from 'react-native-track-player';
