@@ -1,14 +1,15 @@
-import { Alert, Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import LoginButton from '../components/LoginButton'
-import LoginTextInput from '../components/LoginTextInput'
-import SocialMedia from '../components/SocialMedia'
-import auth from "@react-native-firebase/auth"
+import { Alert, TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState } from 'react';
+import LoginButton from '../components/LoginButton';
+import LoginTextInput from '../components/LoginTextInput';
+import auth from "@react-native-firebase/auth";
+import { useTheme } from '@react-navigation/native';
 
 const SignUpScreen = ({ navigation }) => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const { colors } = useTheme();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const signUpTestFn = () => {
         if (password !== confirmPassword) {
@@ -29,71 +30,75 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <ImageBackground source={require("../../assets/background.png")} style={styles.imageBackground}>
-                <Text style={styles.title}>StreamSonic</Text>
-                <View style={styles.inputContainer}>
-                    <LoginTextInput value={email} onChangeText={text => setEmail(text)} placeholder="Email or Username" />
-                    <LoginTextInput value={password} onChangeText={text => setPassword(text)} placeholder="Password" secureTextEntry />
-                    <LoginTextInput value={confirmPassword} onChangeText={text => setConfirmPassword(text)} placeholder="Confirm Password" secureTextEntry />
-                    <View style={styles.buttonWrapper}>
-                        <LoginButton onPress={signUpTestFn} title={"Sign Up"} />
-                    </View>
-                    <Text style={styles.orText}>OR</Text>
-                    <SocialMedia />
+        <View style={[styles.container, { backgroundColor: '#2c2d33' }]}>
+            <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <View style={styles.inputContainer}>
+                <LoginTextInput
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    placeholder="Email or Username"
+                    placeholderTextColor={colors.textSecondary}
+                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                />
+                <LoginTextInput
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    placeholder="Password"
+                    secureTextEntry
+                    placeholderTextColor={colors.textSecondary}
+                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                />
+                <LoginTextInput
+                    value={confirmPassword}
+                    onChangeText={text => setConfirmPassword(text)}
+                    placeholder="Confirm Password"
+                    secureTextEntry
+                    placeholderTextColor={colors.textSecondary}
+                    style={[styles.input, { borderColor: '#FFA300', color: colors.textPrimary }]}
+                />
+                <View style={styles.buttonWrapper}>
+                    <LoginButton onPress={signUpTestFn} title={"Sign Up"} buttonStyle={{ backgroundColor: '#FFA300' }} />
                 </View>
-            </ImageBackground>
+                <Text style={[styles.orText, { color: colors.textSecondary }]}>OR</Text>
+            </View>
         </View>
     )
 }
 
-export default SignUpScreen
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    },
-    imageBackground: {
-        height: "100%",
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         paddingHorizontal: 20,
-        alignItems: "center"
     },
-    image: {
-        height: 50,
-        width: 90,
-        resizeMode: "stretch",
-        position: "absolute",
-        right: 20,
-        top: 20
-    },
-    title: {
-        fontSize: 40,
-        color: "white",
-        marginTop: 60
+    logo: {
+        width: 200,
+        height: 200,
+        marginBottom: 20,
     },
     inputContainer: {
-        height: 450,
-        width: "100%",
-        backgroundColor: "white",
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 80,
+        width: '100%',
+        alignItems: 'center',
         paddingHorizontal: 20,
+    },
+    input: {
+        height: 50,
+        width: '100%',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 10,
     },
     buttonWrapper: {
         width: '100%',
         height: 50,
         marginTop: 5,
     },
-    textNoAccount: {
-        alignSelf: "flex-end",
-        marginRight: 10,
-        color: "black",
-    },
     orText: {
         fontSize: 20,
-        color: "gray",
-        marginTop: 20
-    }
-})
+        marginTop: 20,
+    },
+});

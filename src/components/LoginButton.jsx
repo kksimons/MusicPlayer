@@ -1,16 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const LoginButton = ({ title, onPress }) => {
+const LoginButton = ({ title, onPress, buttonStyle }) => {
     return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={[styles.container, buttonStyle]}>
             <Text style={styles.title}>{title}</Text>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
-export default LoginButton
+export default LoginButton;
 
 const styles = StyleSheet.create({
     container: {
@@ -19,10 +19,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 25,
-        backgroundColor: "#ff0036",
     },
     title: {
         color: "white",
         fontSize: 20,
     }
-})
+});

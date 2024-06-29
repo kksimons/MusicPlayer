@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, View, useColorScheme } from "react-native"
 import HomeScreen from "./src/screens/HomeScreen";
@@ -14,6 +14,7 @@ import useLikeSongs from "./src/store/likeStore";
 import { darkTheme } from "./src/theme/darkTheme";
 import { lightTheme } from "./src/theme/lightTheme";
 import { useThemeStore } from "./src/store/themeStore";
+import messaging from '@react-native-firebase/messaging';
 
 
 const App = () => {
@@ -21,6 +22,27 @@ const App = () => {
   const { loadLikedSongs } = useLikeSongs()
   //get the system default
   const scheme = useColorScheme()
+
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  const getToken = async () => {
+    const token = await messaging().getToken()
+    console.log("Token = ", token)
+  }
+
+  useEffect(() => {
+    requestUserPermission()
+    getToken()
+  }, [])
 
   useEffect(() => {
     loadLikedSongs()
