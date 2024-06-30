@@ -1,29 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { colors } from '../constants/colors'
-import { fontFamilies } from '../constants/fonts'
-import { fontSize, spacing } from '../constants/dimensions'
-import { Slider } from 'react-native-awesome-slider'
-import { useSharedValue } from 'react-native-reanimated'
-import TrackPlayer, { useProgress } from 'react-native-track-player'
-import { formatSecondsToMinutes } from '../utils/conversions'
-import { useTheme } from '@react-navigation/native'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { fontFamilies } from '../constants/fonts';
+import { fontSize, spacing } from '../constants/dimensions';
+import { Slider } from 'react-native-awesome-slider';
+import { useSharedValue } from 'react-native-reanimated';
+import TrackPlayer, { useProgress } from 'react-native-track-player';
+import { formatSecondsToMinutes } from '../utils/conversions';
+import { useTheme } from '@react-navigation/native';
 
 const PlayerProgressBar = () => {
-    const { colors } = useTheme()
-
-    const { duration, position } = useProgress()
-    const progress = useSharedValue(0.25);
+    const { colors } = useTheme();
+    const { duration, position } = useProgress();
+    const progress = useSharedValue(0);
     const min = useSharedValue(0);
     const max = useSharedValue(1);
-    const isSliding = useSharedValue(false)
+    const isSliding = useSharedValue(false);
 
-    if (isSliding.value) {
-        progress.value = duration > 0 ? position / duration : 0
+    if (!isSliding.value) {
+        progress.value = duration > 0 ? position / duration : 0;
     }
 
-    const trackElapsedTime = formatSecondsToMinutes(position)
-    const trackRemainingTime = formatSecondsToMinutes(duration - position)
+    const trackElapsedTime = formatSecondsToMinutes(position);
+    const trackRemainingTime = formatSecondsToMinutes(duration - position);
 
     return (
         <View>
@@ -48,28 +46,28 @@ const PlayerProgressBar = () => {
                 renderBubble={() => null}
                 onSlidingStart={() => (isSliding.value = true)}
                 onValueChange={async (value) => {
-                    await TrackPlayer.seekTo(value * duration)
+                    await TrackPlayer.seekTo(value * duration);
                 }}
                 onSlidingComplete={async (value) => {
                     if (!isSliding.value) {
-                        return
+                        return;
                     }
-                    isSliding.value = false
-                    await TrackPlayer.seekTo(value * duration)
+                    isSliding.value = false;
+                    await TrackPlayer.seekTo(value * duration);
                 }}
             />
         </View>
-    )
-}
+    );
+};
 
-export default PlayerProgressBar
+export default PlayerProgressBar;
 
 const styles = StyleSheet.create({
     timeRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: spacing.xl
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: spacing.xl,
     },
     timeText: {
         fontFamily: fontFamilies.regular,
@@ -78,5 +76,5 @@ const styles = StyleSheet.create({
     },
     sliderContainer: {
         marginVertical: spacing.xl,
-    }
-})
+    },
+});
