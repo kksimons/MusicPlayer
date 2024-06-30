@@ -2388,6 +2388,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/firestore@npm:^20.1.0":
+  version: 20.1.0
+  resolution: "@react-native-firebase/firestore@npm:20.1.0"
+  peerDependencies:
+    "@react-native-firebase/app": 20.1.0
+  checksum: ceb28720f786f406765ccd9219bc0069cda137e0fc399253e82a846a93716f6c97c2a6d629eedbac92f5e16612dba799580d50f6c3f619b6904ddfb775d3c88a
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/messaging@npm:^20.1.0":
   version: 20.1.0
   resolution: "@react-native-firebase/messaging@npm:20.1.0"
@@ -3189,6 +3198,7 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.23.1
     "@react-native-firebase/app": ^20.1.0
     "@react-native-firebase/auth": ^20.1.0
+    "@react-native-firebase/firestore": ^20.1.0
     "@react-native-firebase/messaging": ^20.1.0
     "@react-native-google-signin/google-signin": ^12.2.1
     "@react-native/babel-preset": 0.74.84

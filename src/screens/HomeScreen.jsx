@@ -1,16 +1,48 @@
-import React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import Header from '../components/Header';
-import { fontSize, iconSizes, spacing } from '../constants/dimensions';
-import { fontFamilies } from '../constants/fonts';
-import SongCard from '../components/SongCard';
 import SongCardWithCategory from '../components/SongCardWithCategory';
 import FloatingPlayer from '../components/FloatingPlayer';
-import { songsWithCategory } from '../data/songsWithCategory';
 import { useTheme } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeScreen = () => {
-    const { colors } = useTheme()
+    const { colors } = useTheme();
+    const [songsWithCategory, setSongsWithCategory] = useState([]);
+
+    useEffect(() => {
+        const fetchSongs = async () => {
+            try {
+                const songCollection = await firestore().collection('songs').get();
+                const recommendedSongs = songCollection.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    release_date: doc.data().release_date.toDate(), // convert timestamp to Date object
+                }));
+
+                const categories = [
+                    {
+                        title: 'Recommended For You',
+                        songs: recommendedSongs,
+                    },
+                    {
+                        title: 'New Release',
+                        songs: recommendedSongs,
+                    },
+                    {
+                        title: 'NCS Songs',
+                        songs: recommendedSongs,
+                    },
+                ];
+
+                setSongsWithCategory(categories);
+            } catch (error) {
+                console.error("Error fetching songs: ", error);
+            }
+        };
+
+        fetchSongs();
+    }, []);
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -18,7 +50,6 @@ const HomeScreen = () => {
             <FlatList
                 data={songsWithCategory}
                 renderItem={({ item }) => <SongCardWithCategory item={item} />}
-                // space after scrolling at the bottom
                 contentContainerStyle={{
                     paddingBottom: 400,
                 }}
@@ -26,12 +57,12 @@ const HomeScreen = () => {
             <FloatingPlayer />
         </View>
     );
-}
+};
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    }
-})
+        flex: 1,
+    },
+});
