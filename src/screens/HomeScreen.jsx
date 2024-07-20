@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, Text } from 'react-native';
 import Header from '../components/Header';
 import SongCardWithCategory from '../components/SongCardWithCategory';
 import ArtistCard from '../components/ArtistCard';
@@ -9,9 +9,13 @@ import firestore from '@react-native-firebase/firestore';
 import TrackPlayer from 'react-native-track-player';
 import RNFS from 'react-native-fs';
 import SongCard from '../components/SongCard';
+import { fontFamilies } from '../constants/fonts';
+import { fontSize } from '../constants/dimensions';
+import { useThemeStore } from '../store/themeStore';
 
 const HomeScreen = () => {
     const { colors } = useTheme();
+    const { isDarkMode } = useThemeStore();
     const [songsWithCategory, setSongsWithCategory] = useState([]);
     const [expandedArtist, setExpandedArtist] = useState(null);
 
@@ -151,6 +155,7 @@ const HomeScreen = () => {
                 renderItem={({ item }) =>
                     item.title === 'Featured Artists' ? (
                         <View>
+                            <Text style={[styles.heading, { color: colors.textPrimary }]}>Featured Artists</Text>
                             <FlatList
                                 data={item.artists}
                                 renderItem={({ item }) => (
@@ -210,5 +215,12 @@ const styles = StyleSheet.create({
     songsList: {
         paddingHorizontal: 20,
         marginTop: 10,
+    },
+    heading: {
+        fontSize: fontSize.xl,
+        fontFamily: fontFamilies.bold,
+        marginLeft: 20,
+        marginTop: 20,
+        marginBottom: 20,
     },
 });
