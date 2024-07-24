@@ -13,7 +13,7 @@ import { fontFamilies } from '../constants/fonts';
 import { fontSize } from '../constants/dimensions';
 import { useThemeStore } from '../store/themeStore';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const { colors } = useTheme();
     const { isDarkMode } = useThemeStore();
     const [songsWithCategory, setSongsWithCategory] = useState([]);
@@ -121,7 +121,6 @@ const HomeScreen = () => {
         const downloadDest = `${RNFS.DocumentDirectoryPath}/${song.title}.mp3`;
 
         if (isDownloaded) {
-            // We don't want it anymore
             try {
                 await RNFS.unlink(downloadDest);
                 setIsDownloaded(false);
@@ -130,7 +129,6 @@ const HomeScreen = () => {
                 console.error('Error removing file:', error);
             }
         } else {
-            // We want it so download it
             try {
                 const downloadResult = await RNFS.downloadFile({
                     fromUrl: song.url,
@@ -145,6 +143,11 @@ const HomeScreen = () => {
                 console.error('Error downloading file:', error);
             }
         }
+    };
+
+    const handleAddSongToPlaylist = (song) => {
+        const serializedSong = { ...song, release_date: song.release_date.toISOString() };
+        navigation.navigate('PLAYLIST_SCREEN', { song: serializedSong });
     };
 
     return (
@@ -174,6 +177,7 @@ const HomeScreen = () => {
                                                             handlePlayTrack(playUrl, item)
                                                         }
                                                         handleDownload={handleDownload}
+                                                        onAddToPlaylist={() => handleAddSongToPlaylist(item)}
                                                     />
                                                 )}
                                                 keyExtractor={item => item.id}
@@ -191,7 +195,7 @@ const HomeScreen = () => {
                             />
                         </View>
                     ) : (
-                        <SongCardWithCategory item={item} />
+                        <SongCardWithCategory item={item} navigation={navigation} />
                     )
                 }
                 contentContainerStyle={{

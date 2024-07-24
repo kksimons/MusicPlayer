@@ -1,3 +1,4 @@
+// src/components/SongCard.js
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { fontSize, iconSizes, spacing } from '../constants/dimensions';
@@ -7,25 +8,25 @@ import { useTheme } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNFS from 'react-native-fs';
 
-const fallbackImageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/152/325x325/1705340894_JZ2NifV4gB_2024---CARTOON-JEYJA---On--On-ft.-Daniel-Levi.jpg'
+const fallbackImageUrl = 'https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/152/325x325/1705340894_JZ2NifV4gB_2024---CARTOON-JEYJA---On--On-ft.-Daniel-Levi.jpg';
 
-const SongCard = ({ item, containerStyle, imageStyle, handlePlay, handleDownload }) => {
-    const { colors } = useTheme()
-    const [isDownloaded, setIsDownloaded] = useState(false)
+const SongCard = ({ item, containerStyle, imageStyle, handlePlay, handleDownload, onAddToPlaylist }) => {
+    const { colors } = useTheme();
+    const [isDownloaded, setIsDownloaded] = useState(false);
 
-    const imageUrl = item?.artwork ? { uri: item.artwork } : { uri: fallbackImageUrl }
+    const imageUrl = item?.artwork ? { uri: item.artwork } : { uri: fallbackImageUrl };
 
     useEffect(() => {
         const checkIfDownloaded = async () => {
-            const downloadDest = `${RNFS.DocumentDirectoryPath}/${item.title}.mp3`
-            const exists = await RNFS.exists(downloadDest)
-            setIsDownloaded(exists)
+            const downloadDest = `${RNFS.DocumentDirectoryPath}/${item.title}.mp3`;
+            const exists = await RNFS.exists(downloadDest);
+            setIsDownloaded(exists);
         };
 
-        checkIfDownloaded()
-    }, [item])
+        checkIfDownloaded();
+    }, [item]);
 
-    const playUrl = isDownloaded ? `file://${RNFS.DocumentDirectoryPath}/${item.title}.mp3` : item.url
+    const playUrl = isDownloaded ? `file://${RNFS.DocumentDirectoryPath}/${item.title}.mp3` : item.url;
 
     const handleDownloadToggle = async () => {
         await handleDownload(item, isDownloaded, setIsDownloaded);
@@ -45,11 +46,14 @@ const SongCard = ({ item, containerStyle, imageStyle, handlePlay, handleDownload
             <TouchableOpacity style={styles.downloadIcon} onPress={handleDownloadToggle}>
                 <Ionicons name={isDownloaded ? "download" : "download-outline"} size={iconSizes.sm} color={colors.iconPrimary} />
             </TouchableOpacity>
+            <TouchableOpacity style={styles.addToPlaylistButton} onPress={onAddToPlaylist}>
+                <Text style={styles.addToPlaylistText}>Add to Playlist</Text>
+            </TouchableOpacity>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
-export default SongCard
+export default SongCard;
 
 const styles = StyleSheet.create({
     container: {
@@ -71,5 +75,19 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: fontSize.md,
         fontFamily: fontFamilies.regular,
-    }
-})
+    },
+    downloadIcon: {
+        position: 'absolute',
+        top: spacing.sm,
+        right: spacing.sm,
+    },
+    addToPlaylistButton: {
+        marginTop: spacing.sm,
+        alignItems: 'center',
+    },
+    addToPlaylistText: {
+        fontFamily: fontFamilies.medium,
+        fontSize: fontSize.md,
+        color: 'blue',
+    },
+});
