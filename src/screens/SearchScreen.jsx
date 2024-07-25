@@ -6,50 +6,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Modal,
-  Button,
   Alert,
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import {spacing, fontSize, iconSizes} from '../constants/dimensions';
 import {fontFamilies} from '../constants/fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SuggestedSongCard from '../components/SuggestedSongCard';
+import FloatingPlayer from '../components/FloatingPlayer';
 
 const SearchScreen = ({navigation}) => {
   const {colors} = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [playlists, setPlaylists] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedSong, setSelectedSong] = useState(null);
-  const currentUserId = auth().currentUser.uid;
-
-  useEffect(() => {
-    const fetchPlaylists = async () => {
-      try {
-        const playlistRef = firestore()
-          .collection('users')
-          .doc(currentUserId)
-          .collection('playlists');
-        const snapshot = await playlistRef.get();
-
-        const fetchedPlaylists = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error('Error fetching playlists:', error);
-      }
-    };
-
-    fetchPlaylists();
-  }, [currentUserId]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -81,69 +51,7 @@ const SearchScreen = ({navigation}) => {
     fetchSuggestions();
   }, [searchTerm]);
 
-  const handleAddSongToPlaylist = async () => {
-    if (selectedPlaylist && selectedSong) {
-      try {
-        await firestore()
-          .collection('users')
-          .doc(currentUserId)
-          .collection('playlists')
-          .doc(selectedPlaylist.id)
-          .update({
-            songs: firestore.FieldValue.arrayUnion(selectedSong.id),
-          });
-
-        Alert.alert(
-          'Song Added',
-          `The song has been added to ${selectedPlaylist.name}.`,
-          [
-            {
-              text: 'OK',
-              onPress: () =>
-                navigation.navigate('PLAYLIST_DETAIL_SCREEN', {
-                  playlistId: selectedPlaylist.id,
-                }),
-            },
-          ],
-        );
-
-        setIsModalVisible(false);
-      } catch (error) {
-        console.error('Error adding song to playlist:', error);
-      }
-    } else {
-      Alert.alert('Please select a playlist.');
-    }
-  };
-
-  const renderSuggestion = ({item}) => (
-    <SuggestedSongCard
-      song={item}
-      onAdd={song => {
-        setSelectedSong(song);
-        setIsModalVisible(true);
-      }}
-    />
-  );
-
-  const renderPlaylistOption = ({item}) => (
-    <TouchableOpacity
-      style={styles.playlistOption}
-      onPress={() => setSelectedPlaylist(item)}>
-      <Ionicons
-        name={
-          selectedPlaylist?.id === item.id
-            ? 'checkbox-outline'
-            : 'square-outline'
-        }
-        size={iconSizes.md}
-        color={colors.iconPrimary}
-      />
-      <Text style={[styles.playlistOptionText, {color: colors.text}]}>
-        {item.name}
-      </Text>
-    </TouchableOpacity>
-  );
+  const renderSuggestion = ({item}) => <SuggestedSongCard song={item} />;
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -189,24 +97,7 @@ const SearchScreen = ({navigation}) => {
         }
         contentContainerStyle={styles.suggestionsContainer}
       />
-      <Modal visible={isModalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContainer, {backgroundColor: colors.card}]}>
-            <Text style={[styles.modalTitle, {color: colors.textPrimary}]}>
-              Select Playlist
-            </Text>
-            <FlatList
-              data={playlists}
-              renderItem={renderPlaylistOption}
-              keyExtractor={item => item.id}
-            />
-            <View style={styles.modalButtons}>
-              <Button title="Cancel" onPress={() => setIsModalVisible(false)} />
-              <Button title="Confirm" onPress={handleAddSongToPlaylist} />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <FloatingPlayer />
     </View>
   );
 };
@@ -252,37 +143,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.md,
     fontFamily: fontFamilies.regular,
     padding: spacing.md,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContainer: {
-    width: '90%',
-    padding: spacing.lg,
-    borderRadius: 10,
-  },
-  modalTitle: {
-    fontSize: fontSize.xl,
-    fontFamily: fontFamilies.bold,
-    marginBottom: spacing.md,
-    textAlign: 'center',
-  },
-  playlistOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.sm,
-  },
-  playlistOptionText: {
-    marginLeft: spacing.sm,
-    fontSize: fontSize.md,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: spacing.md,
   },
 });
 
