@@ -1,4 +1,3 @@
-// src/context/PlaylistContext.js
 import React, {createContext, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -7,54 +6,46 @@ export const PlaylistContext = createContext();
 
 export const PlaylistProvider = ({children}) => {
   const [playlists, setPlaylists] = useState([]);
-  const currentUserId = auth().currentUser.uid;
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
-      try {
-        const playlistRef = firestore()
-          .collection('users')
-          .doc(currentUserId)
-          .collection('playlists');
-        const snapshot = await playlistRef.get();
+    const subscriber = auth().onAuthStateChanged(user => {
+      if (user) {
+        setCurrentUserId(user.uid);
+      } else {
+        setCurrentUserId(null);
+        setPlaylists([]);
+      }
+    });
 
-        const fetchedPlaylists = await Promise.all(
-          snapshot.docs.map(async doc => {
-            const data = doc.data();
-            let artwork = null;
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
-            if (data.songs && data.songs.length > 0) {
-              const firstSongId = data.songs[0];
-              const songDoc = await firestore()
-                .collection('songs')
-                .doc(firstSongId)
-                .get();
-              if (songDoc.exists) {
-                artwork = songDoc.data().artwork;
-              }
-            }
+  useEffect(() => {
+    if (currentUserId) {
+      const playlistRef = firestore()
+        .collection('users')
+        .doc(currentUserId)
+        .collection('playlists');
 
-            return {
-              id: doc.id,
-              ...doc.data(),
-              artwork,
-              songCount: data.songs ? data.songs.length : 0,
-            };
-          }),
-        );
+      const unsubscribe = playlistRef.onSnapshot(snapshot => {
+        const fetchedPlaylists = snapshot.docs.map(doc => ({
+          id: doc.id, // Ensure unique ID from Firestore
+          ...doc.data(),
+          songCount: doc.data().songs ? doc.data().songs.length : 0,
+        }));
+
+        console.log('Fetched playlists: ', fetchedPlaylists); // Log the fetched playlists
 
         setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error('Error fetching playlists:', error);
-      }
-    };
+      });
 
-    fetchPlaylists();
+      return () => unsubscribe();
+    }
   }, [currentUserId]);
 
   const createPlaylist = async name => {
     const newPlaylist = {
-      id: Date.now().toString(),
       name,
       songs: [],
       visibility: true, // Default visibility
@@ -66,10 +57,7 @@ export const PlaylistProvider = ({children}) => {
         .collection('users')
         .doc(currentUserId)
         .collection('playlists')
-        .doc(newPlaylist.id)
-        .set(newPlaylist);
-
-      setPlaylists(prevPlaylists => [...prevPlaylists, newPlaylist]);
+        .add(newPlaylist); // Add a new document
     } catch (error) {
       console.error('Error creating playlist:', error);
     }
@@ -85,14 +73,6 @@ export const PlaylistProvider = ({children}) => {
         .update({
           songs: firestore.FieldValue.arrayUnion(song.id),
         });
-
-      setPlaylists(prevPlaylists =>
-        prevPlaylists.map(playlist =>
-          playlist.id === playlistId
-            ? {...playlist, songs: [...playlist.songs, song]}
-            : playlist,
-        ),
-      );
     } catch (error) {
       console.error('Error adding song to playlist:', error);
     }
@@ -106,10 +86,6 @@ export const PlaylistProvider = ({children}) => {
         .collection('playlists')
         .doc(playlistId)
         .delete();
-
-      setPlaylists(prevPlaylists =>
-        prevPlaylists.filter(playlist => playlist.id !== playlistId),
-      );
     } catch (error) {
       console.error('Error deleting playlist:', error);
     }
@@ -125,17 +101,6 @@ export const PlaylistProvider = ({children}) => {
         .update({
           songs: firestore.FieldValue.arrayRemove(songId),
         });
-
-      setPlaylists(prevPlaylists =>
-        prevPlaylists.map(playlist =>
-          playlist.id === playlistId
-            ? {
-                ...playlist,
-                songs: playlist.songs.filter(song => song.id !== songId),
-              }
-            : playlist,
-        ),
-      );
     } catch (error) {
       console.error('Error removing song from playlist:', error);
     }
@@ -149,12 +114,6 @@ export const PlaylistProvider = ({children}) => {
         .collection('playlists')
         .doc(playlistId)
         .update({name: newName});
-
-      setPlaylists(prevPlaylists =>
-        prevPlaylists.map(playlist =>
-          playlist.id === playlistId ? {...playlist, name: newName} : playlist,
-        ),
-      );
     } catch (error) {
       console.error('Error updating playlist name:', error);
     }
