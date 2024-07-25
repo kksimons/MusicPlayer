@@ -50,7 +50,7 @@ const PlaylistScreen = ({route}) => {
         </Text>
       </View>
 
-      <PlaylistList navigation={navigation} />
+      <PlaylistList />
 
       <TouchableOpacity
         style={[styles.createContainer, {backgroundColor: colors.card}]}

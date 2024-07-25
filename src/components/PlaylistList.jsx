@@ -1,5 +1,4 @@
-// src/components/PlaylistList.jsx
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,11 +13,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontSize, spacing} from '../constants/dimensions';
 import {fontFamilies} from '../constants/fonts';
 import {PlaylistContext} from '../context/PlaylistContext';
+import auth from '@react-native-firebase/auth';
 
 const PlaylistList = () => {
   const {playlists, removePlaylist} = useContext(PlaylistContext);
   const {colors} = useTheme();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log('Received playlists in PlaylistList: ', playlists); // Log received playlists
+  }, [playlists]);
 
   const handleDeletePlaylist = playlistId => {
     Alert.alert(
@@ -40,7 +44,10 @@ const PlaylistList = () => {
     <TouchableOpacity
       style={[styles.playlistContainer, {backgroundColor: colors.card}]}
       onPress={() =>
-        navigation.navigate('PLAYLIST_DETAIL_SCREEN', {playlistId: item.id})
+        navigation.navigate('PLAYLIST_DETAIL_SCREEN', {
+          playlistId: item.id,
+          userId: auth().currentUser.uid, // Pass the user ID here
+        })
       }>
       {item.artwork && (
         <Image source={{uri: item.artwork}} style={styles.artwork} />
@@ -63,13 +70,13 @@ const PlaylistList = () => {
     <View style={styles.container}>
       {playlists.length === 0 ? (
         <Text style={[styles.noPlaylistsText, {color: colors.textSecondary}]}>
-          No playlist created.
+          No playlists found.
         </Text>
       ) : (
         <FlatList
           data={playlists}
           renderItem={renderPlaylist}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
         />
       )}

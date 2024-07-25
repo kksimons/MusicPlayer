@@ -1,5 +1,4 @@
-// src/screens/PlaylistDetailScreen.jsx
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {
   View,
   Text,
@@ -19,9 +18,13 @@ import RNFS from 'react-native-fs';
 import FloatingPlayer from '../components/FloatingPlayer';
 import PlaylistVisibility from '../components/PlaylistVisibility';
 import SongCard from '../components/SongCard';
+import firestore from '@react-native-firebase/firestore';
+import AddToPlaylistButton from '../components/AddToPlaylistButton';
+import auth from '@react-native-firebase/auth';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const PlaylistDetailScreen = ({route}) => {
-  const {playlistId} = route.params;
+  const {playlistId, userId} = route.params;
   const {colors} = useTheme();
   const navigation = useNavigation();
   const {playlists, removeSongFromPlaylist, updatePlaylistName} =
@@ -30,15 +33,50 @@ const PlaylistDetailScreen = ({route}) => {
   const [songs, setSongs] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
+  const currentUserId = auth().currentUser.uid;
+
+  const fetchPlaylist = useCallback(async () => {
+    try {
+      const playlistDoc = await firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('playlists')
+        .doc(playlistId)
+        .get();
+
+      if (playlistDoc.exists) {
+        const playlistData = playlistDoc.data();
+        setPlaylist(playlistData);
+        setPlaylistName(playlistData.name);
+        console.log('Fetched playlist data: ', playlistData); // Add logging
+        fetchSongDetails(playlistData.songs);
+      }
+    } catch (error) {
+      console.error('Error fetching playlist:', error);
+    }
+  }, [playlistId, userId]);
+
+  const fetchSongDetails = useCallback(async songIds => {
+    try {
+      console.log('Fetching song details for song IDs: ', songIds); // Add logging
+      const songDetailsPromises = songIds.map(songId =>
+        firestore().collection('songs').doc(songId).get(),
+      );
+      const songDetails = await Promise.all(songDetailsPromises);
+      const songDetailsData = songDetails.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log('Fetched song details: ', songDetailsData); // Add logging
+      setSongs(songDetailsData);
+    } catch (error) {
+      console.error('Error fetching song details:', error);
+    }
+  }, []);
 
   useEffect(() => {
-    const playlistData = playlists.find(pl => pl.id === playlistId);
-    if (playlistData) {
-      setPlaylist(playlistData);
-      setPlaylistName(playlistData.name);
-      setSongs(playlistData.songs);
-    }
-  }, [playlists, playlistId]);
+    fetchPlaylist();
+  }, [fetchPlaylist]);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -85,10 +123,6 @@ const PlaylistDetailScreen = ({route}) => {
       }
     } else {
       try {
-        // Log the URL before attempting the download
-        console.log('Downloading from URL:', song.url);
-
-        // Ensure the URL is valid
         if (!song.url) {
           throw new Error('Invalid URL');
         }
@@ -115,6 +149,7 @@ const PlaylistDetailScreen = ({route}) => {
   const handleRemoveSong = async songId => {
     try {
       await removeSongFromPlaylist(playlistId, songId);
+      setSongs(songs.filter(song => song.id !== songId));
       Alert.alert('Song removed successfully!');
     } catch (error) {
       console.error('Error removing song:', error);
@@ -129,18 +164,43 @@ const PlaylistDetailScreen = ({route}) => {
     try {
       await updatePlaylistName(playlistId, playlistName);
       setIsEditing(false);
-      console.log('Playlist name updated successfully');
-      Alert.alert('Playlist name updated successfully ' + playlistName);
+      Alert.alert('Playlist name updated successfully!');
     } catch (error) {
       console.error('Error updating playlist name:', error);
     }
   };
 
+  const renderItem = useCallback(
+    ({item}) => (
+      <View>
+        <SongCard
+          containerStyle={{width: '47%'}}
+          imageStyle={{height: 160, width: 160}}
+          item={item}
+          handlePlay={() => handlePlayTrack(item.url, item)}
+          handleDownload={handleDownload}
+          handleRemove={() => handleRemoveSong(item.id)}
+          showRemoveIcon={userId === currentUserId}
+          showAddToPlaylistButton={userId !== currentUserId}
+        />
+      </View>
+    ),
+    [
+      songs,
+      userId,
+      currentUserId,
+      colors,
+      handlePlayTrack,
+      handleDownload,
+      handleRemoveSong,
+    ],
+  );
+
   if (!playlist) {
     return (
       <View style={styles.container}>
         <Text style={[styles.loadingText, {color: colors.textSecondary}]}>
-          Loading...
+          No playlist found
         </Text>
       </View>
     );
@@ -158,11 +218,7 @@ const PlaylistDetailScreen = ({route}) => {
         </TouchableOpacity>
         {isEditing ? (
           <TextInput
-            style={[
-              styles.headingText,
-              styles.inputText,
-              {color: colors.textPrimary},
-            ]}
+            style={[styles.inputText, {color: colors.textPrimary}]}
             value={playlistName}
             onChangeText={setPlaylistName}
             onBlur={handleSaveName}
@@ -176,26 +232,17 @@ const PlaylistDetailScreen = ({route}) => {
           </TouchableOpacity>
         )}
       </View>
-      <PlaylistVisibility
-        playlistId={playlistId}
-        initialVisibility={playlist.visibility}
-      />
+      {userId === currentUserId && (
+        <PlaylistVisibility
+          playlistId={playlistId}
+          initialVisibility={playlist.visibility}
+        />
+      )}
       <FlatList
         data={songs}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <SongCard
-            containerStyle={{width: '47%'}}
-            imageStyle={{height: 160, width: 160}}
-            item={item}
-            handlePlay={() => handlePlayTrack(item.url, item)}
-            handleDownload={handleDownload}
-            handleRemove={() => handleRemoveSong(item.id)}
-            showRemoveIcon
-          />
-        )}
+        renderItem={renderItem}
         numColumns={2}
-        key={(2).toString()}
         contentContainerStyle={{
           paddingBottom: 500,
           paddingHorizontal: spacing.lg,
@@ -238,37 +285,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.lg,
   },
-  songContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.md,
-    borderRadius: 10,
-    marginBottom: spacing.md,
-  },
-  artwork: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-  },
-  songDetails: {
-    marginLeft: spacing.md,
-    flex: 1,
-  },
-  songTitle: {
-    fontSize: fontSize.lg,
-    fontFamily: fontFamilies.medium,
-  },
-  songArtist: {
-    fontSize: fontSize.md,
-    fontFamily: fontFamilies.regular,
-  },
-  actionContainer: {
+  actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: spacing.sm,
-  },
-  listContainer: {
-    paddingBottom: spacing.lg,
+    alignItems: 'center',
   },
 });
 
