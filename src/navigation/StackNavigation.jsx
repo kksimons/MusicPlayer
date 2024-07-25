@@ -7,7 +7,9 @@ import PlayerScreen from '../screens/PlayerScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import PlaylistScreen from '../screens/PlaylistScreen';
+import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import FollowScreen from '../screens/FollowScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +23,11 @@ const StackNavigation = () => {
       <Stack.Screen name="PLAYER_SCREEN" component={PlayerScreen} />
       <Stack.Screen name="PLAYLIST_SCREEN" component={PlaylistScreen} />
       <Stack.Screen name="FOLLOW_SCREEN" component={FollowScreen} />
+      <Stack.Screen
+        name="PLAYLIST_DETAIL_SCREEN"
+        component={PlaylistDetailScreen}
+      />
+      <Stack.Screen name="SEARCH_SCREEN" component={SearchScreen} />
     </Stack.Navigator>
   );
 };
