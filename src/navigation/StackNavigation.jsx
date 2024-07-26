@@ -10,6 +10,8 @@ import PlaylistScreen from '../screens/PlaylistScreen';
 import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import FollowScreen from '../screens/FollowScreen';
 import SearchScreen from '../screens/SearchScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import FAQFormScreen from '../screens/FAQFormScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ const StackNavigation = () => {
         component={PlaylistDetailScreen}
       />
       <Stack.Screen name="SEARCH_SCREEN" component={SearchScreen} />
+      <Stack.Screen name="SETTINGS_SCREEN" component={SettingsScreen} />
+      <Stack.Screen name="FAQ_FORM_SCREEN" component={FAQFormScreen} />
     </Stack.Navigator>
   );
 };
