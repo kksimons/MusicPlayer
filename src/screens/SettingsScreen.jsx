@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'lightblue',
   },
   option: {
     padding: 15,
