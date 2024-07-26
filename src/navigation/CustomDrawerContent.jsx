@@ -107,7 +107,7 @@ const CustomDrawerContent = props => {
             });
           }}
         />
-        <DrawerItem
+        {/* <DrawerItem
           label={'Liked Songs'}
           icon={() => (
             <FontAwesome
@@ -123,7 +123,7 @@ const CustomDrawerContent = props => {
               screen: 'LIKE_SCREEN',
             });
           }}
-        />
+        /> */}
         <DrawerItem
           label={'FAQs'}
           icon={() => (
@@ -137,7 +137,7 @@ const CustomDrawerContent = props => {
           style={styles.drawerItem}
           onPress={() => {
             props.navigation.navigate('StackNavigation', {
-            screen: 'FAQ_FORM_SCREEN',
+              screen: 'FAQ_FORM_SCREEN',
             });
           }}
         />
