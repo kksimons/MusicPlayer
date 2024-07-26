@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -36,6 +37,22 @@ const PlayerScreen = () => {
   useEffect(() => {
     setVolume();
   }, []);
+
+  useEffect(() => {
+    if (!activeTrack) {
+      Alert.alert(
+        'No song playing',
+        'Please select a song to play.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }, [activeTrack, navigation]);
 
   const setVolume = async () => {
     const volume = await TrackPlayer.getVolume();

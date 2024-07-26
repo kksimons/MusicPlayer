@@ -108,10 +108,10 @@ const CustomDrawerContent = props => {
           }}
         />
         <DrawerItem
-          label={'Contact Us'}
+          label={'Liked Songs'}
           icon={() => (
             <FontAwesome
-              name={'envelope-o'}
+              name={'heart'}
               size={iconSizes.md}
               color={colors.iconSecondary}
             />
@@ -137,7 +137,7 @@ const CustomDrawerContent = props => {
           style={styles.drawerItem}
           onPress={() => {
             props.navigation.navigate('StackNavigation', {
-              screen: 'LIKE_SCREEN',
+            screen: 'FAQ_FORM_SCREEN',
             });
           }}
         />
@@ -154,7 +154,7 @@ const CustomDrawerContent = props => {
           style={styles.drawerItem}
           onPress={() => {
             props.navigation.navigate('StackNavigation', {
-              screen: 'LIKE_SCREEN',
+              screen: 'SETTINGS_SCREEN',
             });
           }}
         />
