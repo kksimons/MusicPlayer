@@ -57,10 +57,10 @@ const CustomDrawerContent = props => {
           }}
         />
         <DrawerItem
-          label={'Liked Songs'}
+          label={'Playlists'}
           icon={() => (
-            <AntDesign
-              name={'hearto'}
+            <FontAwesome
+              name={'list'}
               size={iconSizes.md}
               color={colors.iconSecondary}
             />
@@ -69,7 +69,7 @@ const CustomDrawerContent = props => {
           style={styles.drawerItem}
           onPress={() => {
             props.navigation.navigate('StackNavigation', {
-              screen: 'LIKE_SCREEN',
+              screen: 'PLAYLIST_SCREEN',
             });
           }}
         />
@@ -104,23 +104,6 @@ const CustomDrawerContent = props => {
           onPress={() => {
             props.navigation.navigate('StackNavigation', {
               screen: 'PLAYER_SCREEN',
-            });
-          }}
-        />
-        <DrawerItem
-          label={'Playlists'}
-          icon={() => (
-            <FontAwesome
-              name={'list'}
-              size={iconSizes.md}
-              color={colors.iconSecondary}
-            />
-          )}
-          labelStyle={[styles.labelStyle, {color: colors.textPrimary}]}
-          style={styles.drawerItem}
-          onPress={() => {
-            props.navigation.navigate('StackNavigation', {
-              screen: 'PLAYLIST_SCREEN',
             });
           }}
         />
