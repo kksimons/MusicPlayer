@@ -1,29 +1,35 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from 'react'
+// src/navigation/StackNavigation.js
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import LikeScreen from '../screens/LikeScreen';
 import PlayerScreen from '../screens/PlayerScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import PlaylistScreen from '../screens/PlaylistScreen';
+import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
+import FollowScreen from '../screens/FollowScreen';
+import SearchScreen from '../screens/SearchScreen';
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
-    return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false,
-        }}
-        >
-            <Stack.Screen name="LOGIN_SCREEN" component={LoginScreen} />
-            <Stack.Screen name="SIGNUP_SCREEN" component={SignUpScreen} />
-            <Stack.Screen name="HOME_SCREEN" component={HomeScreen} />
-            <Stack.Screen name="LIKE_SCREEN" component={LikeScreen} />
-            <Stack.Screen name="PLAYER_SCREEN" component={PlayerScreen} />
-        </Stack.Navigator>
-    )
-}
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="LOGIN_SCREEN" component={LoginScreen} />
+      <Stack.Screen name="SIGNUP_SCREEN" component={SignUpScreen} />
+      <Stack.Screen name="HOME_SCREEN" component={HomeScreen} />
+      <Stack.Screen name="LIKE_SCREEN" component={LikeScreen} />
+      <Stack.Screen name="PLAYER_SCREEN" component={PlayerScreen} />
+      <Stack.Screen name="PLAYLIST_SCREEN" component={PlaylistScreen} />
+      <Stack.Screen name="FOLLOW_SCREEN" component={FollowScreen} />
+      <Stack.Screen
+        name="PLAYLIST_DETAIL_SCREEN"
+        component={PlaylistDetailScreen}
+      />
+      <Stack.Screen name="SEARCH_SCREEN" component={SearchScreen} />
+    </Stack.Navigator>
+  );
+};
 
-export default StackNavigation
-
-const styles = StyleSheet.create({})
+export default StackNavigation;
