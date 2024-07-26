@@ -1,4 +1,3 @@
-// components/FollowUserCard.jsx
 import React from 'react';
 import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
@@ -6,19 +5,12 @@ import {fontSize, iconSizes, spacing} from '../constants/dimensions';
 import {fontFamilies} from '../constants/fonts';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const FollowUserCard = ({user, onAction, isFollowing}) => {
+const FollowUserCard = ({user, onAction, isFollowing, onPress}) => {
   const {colors} = useTheme();
   const iconName = isFollowing ? 'minuscircleo' : 'pluscircleo';
 
   return (
-    <View
-      style={[
-        styles.userCard,
-        {
-          backgroundColor: colors.userCardBackgroundColor,
-          borderColor: colors.userCardBorderColor,
-        },
-      ]}>
+    <TouchableOpacity onPress={onPress} style={styles.userCard}>
       <Image source={{uri: user.photoURL}} style={styles.profilePic} />
       <View style={styles.userInfo}>
         <Text style={[styles.username, {color: colors.userCardTextPrimary}]}>
@@ -37,7 +29,7 @@ const FollowUserCard = ({user, onAction, isFollowing}) => {
           color={colors.iconPrimary}
         />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -47,7 +39,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: spacing.md,
     borderRadius: 8,
-    marginRight: spacing.md,
+    marginBottom: spacing.md,
+    borderWidth: 1,
   },
   profilePic: {
     width: 50,
