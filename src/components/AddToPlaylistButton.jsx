@@ -94,7 +94,7 @@ const AddToPlaylistButton = ({song}) => {
             : 'square-outline'
         }
         size={iconSizes.md}
-        color={colors.iconPrimary}
+        color={colors.text}
       />
       <Text style={[styles.playlistOptionText, {color: colors.text}]}>
         {item.name}
@@ -107,14 +107,14 @@ const AddToPlaylistButton = ({song}) => {
       <TouchableOpacity onPress={() => setIsModalVisible(true)}>
         <Ionicons
           name="add-circle-outline"
-          size={iconSizes.md}
+          size={iconSizes.sm}
           color={colors.iconPrimary}
         />
       </TouchableOpacity>
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContainer, {backgroundColor: colors.card}]}>
-            <Text style={[styles.modalTitle, {color: colors.textPrimary}]}>
+            <Text style={[styles.modalTitle, {color: colors.text}]}>
               Add Song to Playlist
             </Text>
             {playlists.length === 0 ? (

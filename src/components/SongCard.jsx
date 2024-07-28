@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamilies.medium,
     textAlign: 'center',
-    fontSize: fontSize.lg,
+    fontSize: fontSize.md,
     paddingVertical: spacing.sm,
   },
   artist: {
@@ -114,8 +114,9 @@ const styles = StyleSheet.create({
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.sm,
-    marginTop: spacing.sm,
+    alignContent: 'center',
+    paddingHorizontal: spacing.xl,
+    marginTop: spacing.xl,
   },
   removeIcon: {
     position: 'absolute',

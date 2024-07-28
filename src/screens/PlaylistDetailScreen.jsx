@@ -19,17 +19,15 @@ import FloatingPlayer from '../components/FloatingPlayer';
 import PlaylistVisibility from '../components/PlaylistVisibility';
 import SongCard from '../components/SongCard';
 import firestore from '@react-native-firebase/firestore';
-import AddToPlaylistButton from '../components/AddToPlaylistButton';
 import auth from '@react-native-firebase/auth';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const PlaylistDetailScreen = ({route}) => {
   const {playlistId, userId} = route.params;
   const {colors} = useTheme();
   const navigation = useNavigation();
-  const {playlists, removeSongFromPlaylist, updatePlaylistName} =
+  const {removeSongFromPlaylist, updatePlaylistName} =
     useContext(PlaylistContext);
-  const [playlist, setPlaylist] = useState(null);
+  const [currentPlaylist, setCurrentPlaylist] = useState(null);
   const [songs, setSongs] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
@@ -46,7 +44,7 @@ const PlaylistDetailScreen = ({route}) => {
 
       if (playlistDoc.exists) {
         const playlistData = playlistDoc.data();
-        setPlaylist(playlistData);
+        setCurrentPlaylist(playlistData);
         setPlaylistName(playlistData.name);
         console.log('Fetched playlist data: ', playlistData); // Add logging
         fetchSongDetails(playlistData.songs);
@@ -77,6 +75,12 @@ const PlaylistDetailScreen = ({route}) => {
   useEffect(() => {
     fetchPlaylist();
   }, [fetchPlaylist]);
+
+  useEffect(() => {
+    if (currentPlaylist) {
+      setPlaylistName(currentPlaylist.name);
+    }
+  }, [currentPlaylist]);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -157,16 +161,28 @@ const PlaylistDetailScreen = ({route}) => {
   };
 
   const handleEditName = () => {
-    setIsEditing(true);
+    if (currentUserId === userId) {
+      setIsEditing(true);
+    } else {
+      Alert.alert("You don't have permission to edit this playlist.");
+    }
   };
 
   const handleSaveName = async () => {
-    try {
-      await updatePlaylistName(playlistId, playlistName);
-      setIsEditing(false);
-      Alert.alert('Playlist name updated successfully!');
-    } catch (error) {
-      console.error('Error updating playlist name:', error);
+    if (currentUserId === userId) {
+      try {
+        await updatePlaylistName(playlistId, playlistName);
+        setCurrentPlaylist(prevPlaylist => ({
+          ...prevPlaylist,
+          name: playlistName,
+        }));
+        setIsEditing(false);
+        Alert.alert('Playlist name updated successfully!');
+      } catch (error) {
+        console.error('Error updating playlist name:', error);
+      }
+    } else {
+      Alert.alert("You don't have permission to edit this playlist.");
     }
   };
 
@@ -174,7 +190,7 @@ const PlaylistDetailScreen = ({route}) => {
     ({item}) => (
       <View>
         <SongCard
-          containerStyle={{width: '47%'}}
+          containerStyle={{width: '100%'}}
           imageStyle={{height: 160, width: 160}}
           item={item}
           handlePlay={() => handlePlayTrack(item.url, item)}
@@ -196,7 +212,7 @@ const PlaylistDetailScreen = ({route}) => {
     ],
   );
 
-  if (!playlist) {
+  if (!currentPlaylist) {
     return (
       <View style={styles.container}>
         <Text style={[styles.loadingText, {color: colors.textSecondary}]}>
@@ -227,7 +243,7 @@ const PlaylistDetailScreen = ({route}) => {
         ) : (
           <TouchableOpacity onPress={handleEditName}>
             <Text style={[styles.headingText, {color: colors.textPrimary}]}>
-              {playlist.name}
+              {playlistName}
             </Text>
           </TouchableOpacity>
         )}
@@ -235,7 +251,7 @@ const PlaylistDetailScreen = ({route}) => {
       {userId === currentUserId && (
         <PlaylistVisibility
           playlistId={playlistId}
-          initialVisibility={playlist.visibility}
+          initialVisibility={currentPlaylist.visibility}
         />
       )}
       <FlatList
@@ -249,7 +265,7 @@ const PlaylistDetailScreen = ({route}) => {
         }}
         columnWrapperStyle={{
           justifyContent: 'space-between',
-          marginVertical: spacing.lg,
+          marginVertical: spacing.xl,
         }}
       />
       <FloatingPlayer />
@@ -260,7 +276,7 @@ const PlaylistDetailScreen = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.md,
+    padding: spacing.sm,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -276,7 +292,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputText: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: 'gray',
   },
   loadingText: {
