@@ -82,7 +82,7 @@ const SongCardWithCategory = ({item, navigation}) => {
             item={item}
             handlePlay={playUrl => handlePlayTrack(playUrl, item)}
             handleDownload={handleDownload}
-            showAddToPlaylistButton={true} // Pass the prop here
+            showAddToPlaylistButton={true}
           />
         )}
         horizontal

@@ -107,7 +107,7 @@ const AddToPlaylistButton = ({song}) => {
       <TouchableOpacity onPress={() => setIsModalVisible(true)}>
         <Ionicons
           name="add-circle-outline"
-          size={iconSizes.md}
+          size={iconSizes.sm}
           color={colors.iconPrimary}
         />
       </TouchableOpacity>
