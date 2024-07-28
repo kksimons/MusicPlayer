@@ -73,7 +73,7 @@ const SignUpScreen = ({navigation}) => {
           value={password}
           onChangeText={text => setPassword(text)}
           placeholder="Password"
-          secureTextEntry
+          isPassword
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, {borderColor: '#FFA300', color: 'white'}]}
         />
@@ -81,7 +81,7 @@ const SignUpScreen = ({navigation}) => {
           value={confirmPassword}
           onChangeText={text => setConfirmPassword(text)}
           placeholder="Confirm Password"
-          secureTextEntry
+          isPassword
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, {borderColor: '#FFA300', color: 'white'}]}
         />

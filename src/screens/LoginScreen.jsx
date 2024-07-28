@@ -96,7 +96,7 @@ const LoginScreen = ({navigation}) => {
           value={password}
           onChangeText={text => setPassword(text)}
           placeholder="Password"
-          secureTextEntry
+          isPassword
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, {borderColor: '#FFA300', color: 'white'}]}
         />
