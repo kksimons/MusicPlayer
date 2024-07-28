@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
-const FAQFormScreen = () => {
+const FAQFormScreen = ({ navigation }) => {
   const [question, setQuestion] = useState('');
-  const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    // Handle the FAQ form submission logic
-    console.log('Submitted question:', question);
-    setQuestion('');
+  const handleSubmit = async () => {
+    try {
+      await firestore().collection('questions').add({
+        question,
+        answered: false,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      Alert.alert('Success', 'Your question has been submitted.');
+      setQuestion('');
+    } catch (error) {
+      console.error('Error adding question: ', error);
+      Alert.alert('Error', 'There was an error submitting your question.');
+    }
   };
 
   return (
@@ -24,8 +32,9 @@ const FAQFormScreen = () => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-      
-      {/* Add a button to go back to the previous screen */}
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ADMIN')}>
+        <Text style={styles.buttonText}>Go to Admin</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
         <Text style={styles.buttonText}>Go Back</Text>
       </TouchableOpacity>

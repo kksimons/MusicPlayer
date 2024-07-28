@@ -12,6 +12,7 @@ import FollowScreen from '../screens/FollowScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import FAQFormScreen from '../screens/FAQFormScreen';
+import AdminScreen from '../screens/AdminScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ const StackNavigation = () => {
       <Stack.Screen name="SEARCH_SCREEN" component={SearchScreen} />
       <Stack.Screen name="SETTINGS_SCREEN" component={SettingsScreen} />
       <Stack.Screen name="FAQ_FORM_SCREEN" component={FAQFormScreen} />
+      <Stack.Screen name="ADMIN" component={AdminScreen} />
     </Stack.Navigator>
   );
 };
