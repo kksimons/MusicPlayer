@@ -103,7 +103,7 @@ const AddFollow = ({onUserFollowed}) => {
         Follow other users:
       </Text>
       <TextInput
-        placeholder="Search by email or username"
+        placeholder="Search by email/username: cat123, bear123 ..."
         placeholderTextColor={colors.textSecondary}
         value={searchTerm}
         onChangeText={setSearchTerm}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingLeft: spacing.md,
     marginBottom: spacing.md,
-    fontSize: fontSize.md,
+    fontSize: fontSize.ms,
     fontFamily: fontFamilies.regular,
   },
   suggestedUsersContainer: {

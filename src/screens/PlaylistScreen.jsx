@@ -60,7 +60,7 @@ const PlaylistScreen = ({route}) => {
           size={iconSizes.lg}
           color={colors.primary}
         />
-        <Text style={[styles.createText, {color: colors.textPrimary}]}>
+        <Text style={[styles.createText, {color: colors.text}]}>
           Create Playlist
         </Text>
       </TouchableOpacity>
@@ -71,7 +71,7 @@ const PlaylistScreen = ({route}) => {
         <TextInput
           style={[
             styles.input,
-            {borderColor: colors.border, color: colors.text},
+            {borderColor: colors.border, color: colors.textPrimary},
           ]}
           placeholder="Playlist Name"
           placeholderTextColor={colors.textSecondary}

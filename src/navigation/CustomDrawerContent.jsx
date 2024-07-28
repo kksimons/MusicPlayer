@@ -57,7 +57,7 @@ const CustomDrawerContent = props => {
           }}
         />
         <DrawerItem
-          label={'Playlists'}
+          label={'Your Playlists'}
           icon={() => (
             <FontAwesome
               name={'list'}
