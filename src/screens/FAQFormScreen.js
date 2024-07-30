@@ -64,26 +64,25 @@ const FAQFormScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* header */}
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={handleGoBack}>
           <AntDesign name={"arrowleft"} color={colors.iconPrimary} size={iconSizes.md} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>FAQ</Text>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>FAQ</Text>
       <FlatList
         data={faqs}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleQuestionSelect(item)}>
-            <Text style={styles.questionText}>{item.question}</Text>
+            <Text style={[styles.questionText, { color:'black' }]}>{item.question}</Text>
           </TouchableOpacity>
         )}
       />
       {selectedFAQ ? (
-        <View style={styles.answerContainer}>
-          <Text style={styles.answerTitle}>Answer:</Text>
-          <Text style={styles.answerText}>{selectedFAQ.answer}</Text>
+        <View style={[styles.answerContainer, { backgroundColor: colors.card }]}>
+          <Text style={[styles.answerTitle, { color: 'black' }]}>Answer:</Text>
+          <Text style={[styles.answerText, { color:'black'  }]}>{selectedFAQ.answer}</Text>
         </View>
       ) : null}
     </View>
@@ -119,7 +118,6 @@ const styles = StyleSheet.create({
   answerContainer: {
     marginTop: 30,
     padding: 10,
-    backgroundColor: '#fff',
     borderRadius: 5,
   },
   answerTitle: {
@@ -130,5 +128,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 5,
   },
- 
 });
