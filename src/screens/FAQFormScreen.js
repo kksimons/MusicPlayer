@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
     padding: spacing.lg,
   },
   questionText: {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   answerContainer: {
-    marginTop: 30,
+    marginTop: 5,
     padding: 10,
     borderRadius: 5,
   },
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   },
   answerText: {
     fontSize: 20,
-    marginTop: 5,
+    marginTop:10,
+    marginBottom:10,
   },
 });
