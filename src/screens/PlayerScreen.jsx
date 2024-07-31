@@ -39,29 +39,51 @@ const PlayerScreen = () => {
   const [isMute, setIsMute] = useState(false);
   const navigation = useNavigation();
 
-  //if there is a song playing display alert song is playing if there is no song playing display alert no song is playing select a song to play and go back to the previous screen
-  // useEffect(() => {
-  //     if (!activeTrack) {
-  //         Alert.alert("No Song Playing", "Select a song to play");
-  //     } else {
-  //         Alert.alert("Song is Playing", "Enjoy your music");
-  //     }
-  // }, [activeTrack]);
-
-  //   const setVolume = async () => {
-  //     const volume = await TrackPlayer.getVolume();
-  //     setIsMute(volume === 0 ? true : false);
-  //   };
-
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  //if there is no song playing display alert no song is playing select a song to play and go back to the previous screen
+  // useEffect(() => {
+  //   if (!activeTrack) {
+  //     Alert.alert(
+  //       "No Song Playing",
+  //       "Select a song to play",
+  //       [
+  //         {
+  //           text: "Go Back",
+  //           onPress: handleGoBack
+  //         }
+  //       ]
+  //     );
+  //   }
+  // }, [activeTrack]);
+
+  const setVolume = async () => {
+    const volume = await TrackPlayer.getVolume();
+    setIsMute(volume === 0 ? true : false);
   };
 
   // if loading track, show loader
   if (!activeTrack) {
     return (
+      <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={handleGoBack}>
+            <AntDesign
+              name={'arrowleft'}
+              color={colors.iconPrimary}
+              size={iconSizes.md}
+            />
+          </TouchableOpacity>
+          <Text style={[styles.headerText, {color: colors.textPrimary}]}>
+            Playing Now
+          </Text>
+      </View>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size={'large'} color={colors.iconPrimary} />
+        {/* <ActivityIndicator size={'large'} color={colors.iconPrimary} /> */}
+        <Text style={[ styles.title, {color: colors.textPrimary}]}>No song selected</Text>
+      </View>
       </View>
     );
   }
