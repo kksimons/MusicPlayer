@@ -107,23 +107,6 @@ const CustomDrawerContent = props => {
             });
           }}
         />
-        {/* <DrawerItem
-          label={'Liked Songs'}
-          icon={() => (
-            <FontAwesome
-              name={'heart'}
-              size={iconSizes.md}
-              color={colors.iconSecondary}
-            />
-          )}
-          labelStyle={[styles.labelStyle, {color: colors.textPrimary}]}
-          style={styles.drawerItem}
-          onPress={() => {
-            props.navigation.navigate('StackNavigation', {
-              screen: 'LIKE_SCREEN',
-            });
-          }}
-        /> */}
         <DrawerItem
           label={'FAQs'}
           icon={() => (
@@ -162,7 +145,7 @@ const CustomDrawerContent = props => {
           label={'Sign Out'}
           icon={() => (
             <FontAwesome
-              name={'cog'}
+              name={'sign-out'}
               size={iconSizes.md}
               color={colors.iconSecondary}
             />

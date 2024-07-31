@@ -1,25 +1,31 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { iconSizes, spacing, fontSize, fontFamilies } from '../constants/dimensions';
 
 const SettingsScreen = () => {
   const navigation = useNavigation();
+  const { colors } = useTheme();
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* header */}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={handleGoBack}>
+          <AntDesign name={"arrowleft"} color={colors.iconPrimary} size={iconSizes.md} />
+        </TouchableOpacity>
+      </View>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>Settings</Text>
       {/* Add your settings options here */}
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Car</Text>
+      <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('PROFILE_SCREEN')}>
+        <Text style={[styles.optionText, { color:'black' }]}>Profile</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.option}>
-        <Text style={styles.optionText}>Devices</Text>
-      </TouchableOpacity>
-      {/* Add back button to go back to the previous screen */}
-      <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.goBackButtonText}>Go Back</Text>
-      </TouchableOpacity>
-      {/* Add more options as needed */}
     </View>
   );
 };
@@ -29,15 +35,19 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: spacing.md,
+    paddingHorizontal: spacing.md,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'lightblue',
+    padding: spacing.lg,
   },
   option: {
     padding: 15,
@@ -48,17 +58,5 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 18,
-  },
-  goBackButton: {
-    padding: 15,
-    borderRadius: 5,
-    backgroundColor: 'lightblue',
-    marginVertical: 10,
-    alignItems: 'center',
-    width: '100%',
-  },
-  goBackButtonText: {
-    fontSize: 18,
-    color: 'black',
   },
 });
