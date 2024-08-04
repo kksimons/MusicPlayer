@@ -41,6 +41,7 @@ Once you sign in, you can:
 - **Explore Playlists**: Discover music curated by genre, mood, or artist on the home page.
 - **Create Playlists**: Use the plus icon to compile your personal mixes.
 - **Offline Playback**: Download songs using the download icon to enjoy without an internet connection.
+- **Playback Controls**: Shuffle, repeat tracks, and adjust the volume or mute directly from the player interface.
 - **Social Features**: Follow other users like `ggwp2804` and `cat123` to see their playlists.
 - **FAQ**: Find answers to common questions.
 - **Profile and Settings**: Access the Settings tab to edit your profile.
