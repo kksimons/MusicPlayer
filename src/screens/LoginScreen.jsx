@@ -10,7 +10,6 @@ import React, {useEffect, useState} from 'react';
 import LoginButton from '../components/LoginButton';
 import LoginTextInput from '../components/LoginTextInput';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useTheme} from '@react-navigation/native';
 
@@ -26,30 +25,12 @@ const LoginScreen = ({navigation}) => {
     });
   }, []);
 
-  // If existing users' info are not yet stored in Firestore, add them
-  const checkAndAddUserToFirestore = async user => {
-    const userRef = firestore().collection('users').doc(user.uid);
-    const doc = await userRef.get();
-    if (!doc.exists) {
-      const username = user.email.substring(0, user.email.indexOf('@')); // get texts before email '@' as auto generated username
-      const randomCatPhotoURL = 'https://cataas.com/cat?width=200&height=200'; // random cat photo as auto generated profile picture
-      await userRef.set({
-        email: user.email,
-        username: username,
-        photoURL: randomCatPhotoURL,
-      });
-    }
-  };
-
   async function onGoogleButtonPress() {
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      const userCredential = await auth().signInWithCredential(
-        googleCredential,
-      );
-      await checkAndAddUserToFirestore(userCredential.user);
+      await auth().signInWithCredential(googleCredential);
       console.log('Signed in with Google!');
       navigation.navigate('HOME_SCREEN');
     } catch (error) {
@@ -65,9 +46,8 @@ const LoginScreen = ({navigation}) => {
 
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then(async userCredential => {
-        await checkAndAddUserToFirestore(userCredential.user);
-        console.log(userCredential);
+      .then(res => {
+        console.log(res);
         Alert.alert('Logged In Successfully');
         navigation.navigate('HOME_SCREEN');
       })
@@ -96,7 +76,7 @@ const LoginScreen = ({navigation}) => {
           value={password}
           onChangeText={text => setPassword(text)}
           placeholder="Password"
-          isPassword
+          secureTextEntry
           placeholderTextColor={colors.textSecondary}
           style={[styles.input, {borderColor: '#FFA300', color: 'white'}]}
         />
@@ -116,10 +96,6 @@ const LoginScreen = ({navigation}) => {
             buttonStyle={{backgroundColor: '#FFA300'}}
           />
         </View>
-        <Text style={[styles.orText, {color: colors.textSecondary}]}>OR</Text>
-        <TouchableOpacity onPress={onGoogleButtonPress}>
-          <Text style={styles.googleSignIn}>Sign in with Google</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
